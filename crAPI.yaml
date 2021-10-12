@@ -1,0 +1,167 @@
+openapi: 3.0.0
+info:
+  description: crAPI - Vulnerable API
+  version: 1.0.0
+  title: crAPI
+  contact:
+    email: example@example.org
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+paths:
+  /identity/api/v2/vehicle/vehicles:
+    get:
+      operationId: getVehicleInfo
+      summmary: Retrieve vehicle info
+      parameters:
+      - name: Content-Type
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      - name: Accept
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      responses:
+        "200":
+          description: Report received
+          content:
+            application/json: {}
+          links:
+            getmechanicalreport:
+              operationId: getVehicleLocation
+              parameters:
+                car_id: $response.body#/uuid
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /identity/api/v2/vehicle/{car_id}/location:
+    get:
+      operationId: getVehicleLocation
+      summary: Get vehicle location
+      parameters:
+      - name: Content-Type
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      - name: Accept
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      - name: car_id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json: {}
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /workshop/api/merchant/contact_mechanic:
+    post:
+      operationId: sendMechanicRequest
+      summary: Send request for Mechanic
+      parameters:
+      - name: Content-Type
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      - name: Accept
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                mechanic_code: "MechanicCode"
+                problem_details: "Details"
+                vin: "V1N"
+                mechanic_api: "http://localhost:8888/workshop/api/mechanic/receive_report"
+                repeat_request_if_failed: false
+                number_of_repeats: 1
+      responses:
+        "200":
+          description: Report received
+          content:
+            application/json: {}
+          links:
+            getmechanicalreport:
+              operationId: getMechanicalReport
+              parameters:
+                report_id: $response.body#/id
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+
+  /workshop/api/mechanic/mechanic_report:
+    get:
+      operationId: getMechanicalReport
+      summary: Get Report fro Mechanic
+      parameters:
+      - name: Content-Type
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      - name: Accept
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+        example: application/json
+      - name: report_id
+        in: query
+        required: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Ok
+          content:
+            application/json: {}
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
